@@ -87,10 +87,26 @@ std::string EzComm::EzRecv() {
     char bytesBuf[4];
     recv(currSocket, bytesBuf, 4, 0);
     std::uintptr_t bytesToRecv = (uintptr_t)bytesBuf; 
-    return std::to_string(bytesToRecv);
+    int bytesRemain = bytesToRecv;
+    std::string outp;
+    while (bytesRemain > 0) {
+        char buf[100];
+        int bytesInMsg = recv(currSocket, buf, 100, 0);
+        if (bytesInMsg != -1) {
+            bytesRemain -= bytesInMsg;
+            outp += buf;
+        } else {
+            break;
+        }
+    }
+    return(outp);
 }
 
 int EzComm::EzSend(std::string stdinput) {
     size_t stdinlen = stdinput.size(); 
-    write(currSocket, (char *)&stdinlen, 4);
+    if (write(currSocket, (char *)&stdinlen, 4) != -1) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
