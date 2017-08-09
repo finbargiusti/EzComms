@@ -42,13 +42,16 @@ Connection::Connection(int type) {
         listen(sockfd, 5);
     } else if (type == 1) {// is client
         struct addrinfo hints, *servinfo, *p;
-        int rv;
         char s[INET6_ADDRSTRLEN];
+        int rv;
 
         memset(&hints, 0, sizeof hints);
         hints.ai_family = AF_UNSPEC;
         hints.ai_socktype = SOCK_STREAM;
         hints.ai_flags = AI_PASSIVE;
+
+        if ((rv = getaddrinfo(NULL, "1337", &hints, &servinfo)) != 0) {
+        }
 
         for(p = servinfo; p != NULL; p = p->ai_next) {
             if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
@@ -81,14 +84,13 @@ EzComm::EzComm() {
 }
 
 std::string EzComm::EzRecv() {
-    char bytesBuf[100];
-    read(currSocket, bytesBuf, 4);
-    bytesBuf[4] = '\0';
+    char bytesBuf[4];
+    recv(currSocket, bytesBuf, 4, 0);
     std::uintptr_t bytesToRecv = (uintptr_t)bytesBuf; 
-    std::cout << bytesToRecv;
+    return std::to_string(bytesToRecv);
 }
 
 int EzComm::EzSend(std::string stdinput) {
-    size_t stdinlen = sizeof stdinput; 
+    size_t stdinlen = stdinput.size(); 
     write(currSocket, (char *)&stdinlen, 4);
 }
