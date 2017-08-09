@@ -80,11 +80,11 @@ EzComm::EzComm() {
     struct sockaddr_storage their_addr;
     socklen_t addr_size = sizeof their_addr; 
     currSocket = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size);
-    if (inet_ntop(their_addr.ss_family,((struct sockaddr_in*)(struct sockaddr *)&their_addr), s, sizeof s) << '\n' == NULL) {
-        printf("%s\n", perror());
+/*   if (inet_ntop(their_addr.ss_family,((struct sockaddr_in*)(struct sockaddr *)&their_addr), s, sizeof s) == NULL) {
+        perror("succ");
     } else {
         std::cout << "Connection from: " << inet_ntop(their_addr.ss_family,((struct sockaddr_in*)(struct sockaddr *)&their_addr), s, sizeof s) << '\n';
-    }
+    }*/
 }
 
 std::string EzComm::EzRecv() {
