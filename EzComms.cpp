@@ -80,13 +80,18 @@ EzComm::EzComm() {
     struct sockaddr_storage their_addr;
     socklen_t addr_size = sizeof their_addr; 
     currSocket = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size);
-    std::cout << "Connection from: " << inet_ntop(their_addr.ss_family,((struct sockaddr_in*)(struct sockaddr *)&their_addr), s, sizeof s) << '\n';
+    if (inet_ntop(their_addr.ss_family,((struct sockaddr_in*)(struct sockaddr *)&their_addr), s, sizeof s) << '\n' == NULL) {
+        printf("%s\n", perror());
+    } else {
+        std::cout << "Connection from: " << inet_ntop(their_addr.ss_family,((struct sockaddr_in*)(struct sockaddr *)&their_addr), s, sizeof s) << '\n';
+    }
 }
 
 std::string EzComm::EzRecv() {
     char bytesBuf[4];
     recv(currSocket, bytesBuf, 4, 0);
-    std::uintptr_t bytesToRecv = (uintptr_t)bytesBuf; 
+    std::uint32_t bytesToRecv = *(uint32_t *)bytesBuf; 
+    std::cout << "Received " << bytesToRecv << " bytes" << std::endl;
     int bytesRemain = bytesToRecv;
     std::string outp;
     while (bytesRemain > 0) {
@@ -103,7 +108,7 @@ std::string EzComm::EzRecv() {
 }
 
 int EzComm::EzSend(std::string stdinput) {
-    size_t stdinlen = stdinput.size(); 
+    uint32_t stdinlen = stdinput.size(); 
     if (write(currSocket, (char *)&stdinlen, 4) != -1) {
         return 0;
     } else {
