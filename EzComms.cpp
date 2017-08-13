@@ -15,8 +15,7 @@
 #include "EzComms.h"
 
 using namespace std;
-
-int sockfd;
+using namespace ezComms;
 
 void *get_in_addr(struct sockaddr *sa)
 {
@@ -26,7 +25,7 @@ void *get_in_addr(struct sockaddr *sa)
     return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
-EzComm::EzComm(ConnectionType type) {
+void setupConn(ConnectionType type) {
     if (type == server) {// is server 
         struct addrinfo hints, *res;
 
@@ -37,11 +36,11 @@ EzComm::EzComm(ConnectionType type) {
 
         getaddrinfo(NULL, "1337", &hints, &res);
 
-        sockfd = ::socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+        ezComms::sockfd = ::socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 
-        bind(sockfd, res->ai_addr, res->ai_addrlen);
+        bind(ezComms::sockfd, res->ai_addr, res->ai_addrlen);
 
-        listen(sockfd, 5);
+        listen(ezComms::sockfd, 5);
         connType = 0;
     } else if (type == client) {// is client
         connType = 1;
@@ -50,7 +49,7 @@ EzComm::EzComm(ConnectionType type) {
     }
 }
 
-EzComm::socket::socket() {
+Socket::Socket() {
     if (connType == 1) {
         if (socketNumber != 0) {
             struct addrinfo hints, *servinfo, *p;
@@ -88,11 +87,11 @@ EzComm::socket::socket() {
         char s[INET6_ADDRSTRLEN];
         struct sockaddr_storage their_addr;
         socklen_t addr_size = sizeof their_addr; 
-        new_sock = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size);
+        new_sock = accept(ezComms::sockfd, (struct sockaddr *)&their_addr, &addr_size);
     }
 }
 
-std::string EzComm::socket::recv() {
+std::string Socket::recv() {
     char bytesBuf[4];
     read(currSocket, bytesBuf, 4);
     uint32_t bytesToRecv = *(uint32_t *)bytesBuf; 
@@ -113,7 +112,7 @@ std::string EzComm::socket::recv() {
     return(outp);
 }
 
-int EzComm::socket::send(const char *stdinput, uint32_t stdinlen) {
+int Socket::send(const char *stdinput, uint32_t stdinlen) {
     cout << "Sending " << stdinlen << " bytes" << endl;
     if (write(currSocket, (char *)&stdinlen, 4) != -1) {
         int bytesRemain = stdinlen;
