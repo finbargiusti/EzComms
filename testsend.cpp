@@ -1,14 +1,10 @@
 #include "EzComms.h"
-#include <arpa/inet.h>
-#include <list>
 #include <iostream>
 
 int main() {
-	Connection connection(1);
-	while (true) {
-		EzComm pipe;
-		std::string stdinput;
-		std::cin >> stdinput;
-		pipe.EzSend(stdinput);
-	}
+	EzComm conn(client);
+	EzComm::socket pipe();
+	std::string stdinput;
+	getline(std::cin, stdinput);
+	pipe.send(stdinput.c_str(), stdinput.size());
 }

@@ -14,6 +14,8 @@
 #include <signal.h>
 #include "EzComms.h"
 
+using namespace std;
+
 int sockfd;
 
 void *get_in_addr(struct sockaddr *sa)
@@ -24,8 +26,8 @@ void *get_in_addr(struct sockaddr *sa)
     return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
-Connection::Connection(int type) {
-    if (type == 0) {// is server 
+EzComm::EzComm(ConnectionType type) {
+    if (type == server) {// is server 
         struct addrinfo hints, *res;
 
         memset(&hints, 0, sizeof hints);
@@ -35,81 +37,93 @@ Connection::Connection(int type) {
 
         getaddrinfo(NULL, "1337", &hints, &res);
 
-        sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+        sockfd = ::socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 
         bind(sockfd, res->ai_addr, res->ai_addrlen);
 
         listen(sockfd, 5);
-    } else if (type == 1) {// is client
-        struct addrinfo hints, *servinfo, *p;
-        char s[INET6_ADDRSTRLEN];
-        int rv;
-
-        memset(&hints, 0, sizeof hints);
-        hints.ai_family = AF_UNSPEC;
-        hints.ai_socktype = SOCK_STREAM;
-        hints.ai_flags = AI_PASSIVE;
-
-        if ((rv = getaddrinfo(NULL, "1337", &hints, &servinfo)) != 0) {
-        }
-
-        for(p = servinfo; p != NULL; p = p->ai_next) {
-            if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
-                continue;
-            }
-
-            if (connect(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
-                close(sockfd);
-                continue; }
-
-            break;
-        }
-
-        inet_ntop(p->ai_family, get_in_addr((struct sockaddr *)p->ai_addr),
-                s, sizeof s);
-
-        freeaddrinfo(servinfo);
+        connType = 0;
+    } else if (type == client) {// is client
+        connType = 1;
     } else {// You fucked up
-        throw std::out_of_range("Incompatible type ID");
+        throw out_of_range("Incompatible type ID");
     }
 }
 
+EzComm::socket::socket() {
+    if (connType == 1) {
+        if (socketNumber != 0) {
+            struct addrinfo hints, *servinfo, *p;
+            char s[INET6_ADDRSTRLEN];
+            int rv;
 
-EzComm::EzComm() {
-    char s[INET6_ADDRSTRLEN];
-    struct sockaddr_storage their_addr;
-    socklen_t addr_size = sizeof their_addr; 
-    currSocket = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size);
-/*   if (inet_ntop(their_addr.ss_family,((struct sockaddr_in*)(struct sockaddr *)&their_addr), s, sizeof s) == NULL) {
-        perror("succ");
-    } else {
-        std::cout << "Connection from: " << inet_ntop(their_addr.ss_family,((struct sockaddr_in*)(struct sockaddr *)&their_addr), s, sizeof s) << '\n';
-    }*/
+            memset(&hints, 0, sizeof hints);
+            hints.ai_family = AF_UNSPEC;
+            hints.ai_socktype = SOCK_STREAM;
+            hints.ai_flags = AI_PASSIVE;
+
+            if ((rv = getaddrinfo(NULL, "1337", &hints, &servinfo)) != 0) {
+            }
+
+            for(p = servinfo; p != NULL; p = p->ai_next) {
+                if ((new_sock = ::socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
+                    continue;
+                }
+
+                if (connect(new_sock, p->ai_addr, p->ai_addrlen) == -1) {
+                    close(new_sock);
+                    continue; }
+
+                break;
+            }
+
+            inet_ntop(p->ai_family, get_in_addr((struct sockaddr *)p->ai_addr),
+                    s, sizeof s);
+
+            freeaddrinfo(servinfo);
+        } else {
+            throw "Client can only have one socket!";
+        }
+    } else if (connType == 0) {
+        char s[INET6_ADDRSTRLEN];
+        struct sockaddr_storage their_addr;
+        socklen_t addr_size = sizeof their_addr; 
+        new_sock = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size);
+    }
 }
 
-std::string EzComm::EzRecv() {
+std::string EzComm::socket::recv() {
     char bytesBuf[4];
-    recv(currSocket, bytesBuf, 4, 0);
-    std::uint32_t bytesToRecv = *(uint32_t *)bytesBuf; 
-    std::cout << "Received " << bytesToRecv << " bytes" << std::endl;
+    read(currSocket, bytesBuf, 4);
+    uint32_t bytesToRecv = *(uint32_t *)bytesBuf; 
+    cout << "Received " << bytesToRecv << " bytes" << endl;
     int bytesRemain = bytesToRecv;
-    std::string outp;
+    string outp;
     while (bytesRemain > 0) {
-        char buf[100];
-        int bytesInMsg = recv(currSocket, buf, 100, 0);
+        char buf[bytesRemain];
+        int bytesInMsg = read(currSocket, buf, bytesRemain);
         if (bytesInMsg != -1) {
             bytesRemain -= bytesInMsg;
             outp += buf;
         } else {
-            break;
+            perror("oh shit");
+            return NULL;
         }
     }
     return(outp);
 }
 
-int EzComm::EzSend(std::string stdinput) {
-    uint32_t stdinlen = stdinput.size(); 
+int EzComm::socket::send(const char *stdinput, uint32_t stdinlen) {
+    cout << "Sending " << stdinlen << " bytes" << endl;
     if (write(currSocket, (char *)&stdinlen, 4) != -1) {
+        int bytesRemain = stdinlen;
+        const char *buffer = stdinput;
+        while (bytesRemain > 0) {
+            bytesRemain = write(currSocket, buffer+(stdinlen - bytesRemain), bytesRemain);
+            if (bytesRemain == -1) {
+                perror("Uh-Oh");
+            }
+        }
         return 0;
     } else {
         return 1;
