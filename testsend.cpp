@@ -8,5 +8,7 @@ int main() {
 	Socket pipe;
 	std::string stdinput;
 	getline(std::cin, stdinput);
-	pipe.send(stdinput.c_str(), stdinput.size());
+	uint32_t stinlen = (uint32_t)stdinput.size();
+	std::cout << stinlen << std::endl;
+	pipe.send(stdinput.c_str(), stinlen);
 }

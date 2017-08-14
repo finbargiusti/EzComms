@@ -128,7 +128,7 @@ int Socket::send(const char *stdinput, uint32_t stdinlen) {
         int bytesRemain = stdinlen;
         const char *buffer = stdinput;
         while (bytesRemain > 0) {
-            bytesRemain = write(currSocket, buffer+(stdinlen - bytesRemain), bytesRemain);
+            bytesRemain = ::send(currSocket, buffer+(stdinlen - bytesRemain), bytesRemain, 0);
             if (bytesRemain == -1) {
                 perror("Uh-Oh");
             }
