@@ -17,6 +17,13 @@
 using namespace std;
 using namespace ezComms;
 
+int sockfd;
+
+int currSocket; 
+int connType;
+int socketNumber;
+
+
 void *get_in_addr(struct sockaddr *sa)
 {
     if (sa->sa_family == AF_INET) {
@@ -25,7 +32,7 @@ void *get_in_addr(struct sockaddr *sa)
     return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
-void setupConn(ConnectionType type) {
+void ezComms::setupConn(ConnectionType type) {
     if (type == server) {// is server 
         struct addrinfo hints, *res;
 
@@ -36,11 +43,11 @@ void setupConn(ConnectionType type) {
 
         getaddrinfo(NULL, "1337", &hints, &res);
 
-        ezComms::sockfd = ::socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+        sockfd = ::socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 
-        bind(ezComms::sockfd, res->ai_addr, res->ai_addrlen);
+        bind(sockfd, res->ai_addr, res->ai_addrlen);
 
-        listen(ezComms::sockfd, 5);
+        listen(sockfd, 5);
         connType = 0;
     } else if (type == client) {// is client
         connType = 1;
@@ -51,7 +58,7 @@ void setupConn(ConnectionType type) {
 
 Socket::Socket() {
     if (connType == 1) {
-        if (socketNumber != 0) {
+        if (socketNumber == 0) {
             struct addrinfo hints, *servinfo, *p;
             char s[INET6_ADDRSTRLEN];
             int rv;
@@ -80,6 +87,7 @@ Socket::Socket() {
                     s, sizeof s);
 
             freeaddrinfo(servinfo);
+            socketNumber += 1;
         } else {
             throw "Client can only have one socket!";
         }
@@ -87,7 +95,9 @@ Socket::Socket() {
         char s[INET6_ADDRSTRLEN];
         struct sockaddr_storage their_addr;
         socklen_t addr_size = sizeof their_addr; 
-        new_sock = accept(ezComms::sockfd, (struct sockaddr *)&their_addr, &addr_size);
+        new_sock = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size);
+        printf("%s\n", "o shit");
+        socketNumber += 1;
     }
 }
 

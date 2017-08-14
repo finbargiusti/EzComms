@@ -6,12 +6,6 @@
 namespace ezComms {
 	enum ConnectionType {server, client};
 
-	int sockfd;
-
-	int currSocket;	
-	int connType;
-	int socketNumber;
-
 	void setupConn(ConnectionType type);
 
 	class Socket {
