@@ -14,6 +14,6 @@ namespace ezComms {
 			int send(const char *stdinput, uint32_t stdinlen);
 			std::string recv();
 		private:
-			int new_sock;
+			int sock_fd;
 	};
 };

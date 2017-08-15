@@ -72,12 +72,12 @@ Socket::Socket() {
             }
 
             for(p = servinfo; p != NULL; p = p->ai_next) {
-                if ((new_sock = ::socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
+                if ((sock_fd = ::socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
                     continue;
                 }
 
-                if (connect(new_sock, p->ai_addr, p->ai_addrlen) == -1) {
-                    close(new_sock);
+                if (connect(sock_fd, p->ai_addr, p->ai_addrlen) == -1) {
+                    close(sock_fd);
                     continue; }
 
                 break;
@@ -95,22 +95,21 @@ Socket::Socket() {
         char s[INET6_ADDRSTRLEN];
         struct sockaddr_storage their_addr;
         socklen_t addr_size = sizeof their_addr; 
-        new_sock = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size);
-        printf("%s\n", "o shit");
+        sock_fd = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size);
         socketNumber += 1;
     }
 }
 
 std::string Socket::recv() {
     char bytesBuf[4];
-    read(currSocket, bytesBuf, 4);
+    read(sock_fd, bytesBuf, 4);
     uint32_t bytesToRecv = *(uint32_t *)bytesBuf; 
-    cout << "Received " << bytesToRecv << " bytes" << endl;
+//    cout << "Received " << bytesToRecv << " bytes" << endl;
     int bytesRemain = bytesToRecv;
     string outp;
     while (bytesRemain > 0) {
         char buf[bytesRemain];
-        int bytesInMsg = read(currSocket, buf, bytesRemain);
+        int bytesInMsg = read(sock_fd, buf, bytesRemain);
         if (bytesInMsg != -1) {
             bytesRemain -= bytesInMsg;
             outp += buf;
@@ -123,12 +122,12 @@ std::string Socket::recv() {
 }
 
 int Socket::send(const char *stdinput, uint32_t stdinlen) {
-    cout << "Sending " << stdinlen << " bytes" << endl;
-    if (write(currSocket, (char *)&stdinlen, 4) != -1) {
+//    cout << "Sending " << stdinlen << " bytes" << endl;
+    if (write(sock_fd, (char *)&stdinlen, 4) != -1) {
         int bytesRemain = stdinlen;
         const char *buffer = stdinput;
         while (bytesRemain > 0) {
-            bytesRemain = ::send(currSocket, buffer+(stdinlen - bytesRemain), bytesRemain, 0);
+            bytesRemain = ::send(sock_fd, buffer+(stdinlen - bytesRemain), bytesRemain, 0);
             if (bytesRemain == -1) {
                 perror("Uh-Oh");
             }
