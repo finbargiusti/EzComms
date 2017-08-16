@@ -6,8 +6,8 @@
 	<title>EzComms</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="css/main.css">
-	<link rel="stylesheet" href="css/androidstudio.css">	
-	<script src="js/highlight.pack.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/androidstudio.min.css">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 	<script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body>
@@ -17,9 +17,20 @@
 			A library that makes network communications easy
 		</p>
 	</div >
-	<div id="content" >
 		<div id="content-title" >
 			<h1>Examples</h1>
+		</div>
+	<div id="content-wrapper">
+	<div id="content" >
+			<p>It really is easy, this is ALL you need for a client that connects to a server, receives data and prints it.</p>
+			<pre><code>#include <span><</span>iostream>
+#include "EzComms.h"
+
+int main() {
+	EzComms::setupConn(client);
+	EzComms::Socket pipe;
+	printf("%s\n", pipe.recv().c_str());
+}</code></pre>
 		</div>
 	</div>
 	<script src="js/main.js" type="text/javascript" charset="utf-8" async defer></script>

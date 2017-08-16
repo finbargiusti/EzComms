@@ -22,6 +22,12 @@ body {
 		font-family:sans-serif;
 		margin-bottom:3vw;
 	}
+	#content-title {
+		text-align: center;	
+	}
+	#content-title h1 {
+		text-indent:0px
+	}
 }
 @media all and (min-width:600px) {
 	#header h1 {
@@ -33,6 +39,12 @@ body {
 		font-size:2vw;
 		font-family:sans-serif;
 		margin-bottom:3vw;
+	}
+	#content-title {
+		text-align:center;
+	}
+	#content-title h1 {
+		text-indent:0em;
 	}
 }
 @media all and (min-width:1000px) {
@@ -46,10 +58,17 @@ body {
 		font-family:sans-serif;
 		margin-bottom:3vw;
 	}
+	#content-title {
+		text-align:left;
+	}
+	#content-title h1 {
+		text-indent:2em;
+	}
 }
 #content {
-	width:100vw;
-	height:100vh;
+	display: inline-block;
+	text-align: left;
+	max-width: 80vw;
 	background-color: ghostwhite;
 }
 #content h2 {
@@ -70,10 +89,18 @@ body {
 	width:100%;
 }
 #content-title h1 {
-	text-indent: 2em;
+	margin-left: 0;
+	margin-right: 0;
 	margin:0;
 	padding:0;
 	color:white;
 	font-family: sans-serif;
 	line-height: 2; 	
+}
+pre {
+	border-radius: 5px;
+	overflow: hidden;
+}
+#content-wrapper {
+	text-align:center;
 }
