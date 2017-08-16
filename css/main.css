@@ -5,22 +5,47 @@ body {
 	overflow-y: scroll;
 }
 #header {
-	position:absolute;
+	padding-top:1vw;
+	padding-bottom: 3vw;
 	margin-top:0;
 	font-family: serif;
 	width: 100vw;
 	background-color: #3498db;
 	text-align: center;
 }
-#header h1 {
-	color:ghostwhite;
-	font-size:5vw;
+@media all and (min-width:200px) {
+	#header h1 {
+		color:ghostwhite;
+	}
+	#header p {
+		color:ghostwhite;
+		font-family:sans-serif;
+		margin-bottom:3vw;
+	}
 }
-#header p {
-	color:ghostwhite;
-	font-size:2vw;
-	font-family:sans-serif;
-	margin-bottom:3vw;
+@media all and (min-width:600px) {
+	#header h1 {
+		color:ghostwhite;
+		font-size:10vw;
+	}
+	#header p {
+		color:ghostwhite;
+		font-size:2vw;
+		font-family:sans-serif;
+		margin-bottom:3vw;
+	}
+}
+@media all and (min-width:1000px) {
+	#header h1 {
+		color:ghostwhite;
+		font-size:6vw;
+	}
+	#header p {
+		color:ghostwhite;
+		font-size:2vw;
+		font-family:sans-serif;
+		margin-bottom:3vw;
+	}
 }
 #content {
 	width:100vw;
@@ -40,3 +65,15 @@ body {
 	margin-right:-8px;
 	padding:0;
 } 
+#content-title {
+	background-color:#282b2e;
+	width:100%;
+}
+#content-title h1 {
+	text-indent: 2em;
+	margin:0;
+	padding:0;
+	color:white;
+	font-family: sans-serif;
+	line-height: 2; 	
+}

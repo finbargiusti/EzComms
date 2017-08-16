@@ -3,6 +3,8 @@
 var header = document.querySelector("#header h1");
 var title = "EzComms";
 
+// Functions
+
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
