@@ -17,11 +17,17 @@
 			A library that makes network communications easy
 		</p>
 	</div >
-		<div id="content-title" >
-			<h1>Examples</h1>
-		</div>
+	<div id="after-title">
+	<div id="content-title" >
+		<h1>Documentation</h1>
+	</div>
+	<div id="doc-nav">
+		<p onclick="EPPZScrollTo.scrollVerticalToElementById('examples', 20);">Examples</p>
+		<p onclick="EPPZScrollTo.scrollVerticalToElementById('tutorial', 20);">Step-by-step tutorial</p>
+	</div>
 	<div id="content-wrapper">
-	<div id="content" >
+		<div id="content" >
+			<h2 id="examples">Examples</h2>
 			<p>It really is easy, this is ALL you need for a client that connects to a server, receives data and prints it.</p>
 			<pre><code>#include <span><</span>iostream>
 #include "EzComms.h"
@@ -31,8 +37,18 @@ int main() {
 	EzComms::Socket pipe;
 	printf("%s\n", pipe.recv().c_str());
 }</code></pre>
-		</div>
+			<h2 id="tutorial">Step-by-step tutorial</h2>
+			<p>First, you have to include the library</p>
+			<pre><code class="cpp">#include "EzComms.h"</code></pre>
+			<p>Next, you have to set up the app for connections as such:</p>
+			<pre><code class="cpp">int main () {
+	EzComms::setupConn(client); // If you are writing the client
+	EzComms::setupConn(server); // If you are writing the server
+}</code></pre>
+			</div>
+	</div>
 	</div>
 	<script src="js/main.js" type="text/javascript" charset="utf-8" async defer></script>
+	<script src="js/lib.js" type="text/javascript" charset="utf-8" async defer></script>
 </body>
 </html>

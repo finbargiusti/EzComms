@@ -28,6 +28,20 @@ body {
 	#content-title h1 {
 		text-indent:0px
 	}
+	#content-wrapper {
+		text-align:center;
+	}
+	#doc-nav {
+		margin:0;
+	}
+	#doc-nav p {
+		padding:10px;
+		margin:0;
+		font-family: sans-serif;
+	}
+	#doc-nav p:hover {
+		background-color:darkgray; 
+	}
 }
 @media all and (min-width:600px) {
 	#header h1 {
@@ -46,6 +60,20 @@ body {
 	#content-title h1 {
 		text-indent:0em;
 	}
+	#content-wrapper {
+		text-align:center;
+	}
+	#doc-nav {
+		margin:0;
+	}
+	#doc-nav p {
+		padding:10px;
+		margin:0;
+		font-family: sans-serif;
+	}
+	#doc-nav p:hover {
+		background-color:darkgray; 
+	}
 }
 @media all and (min-width:1000px) {
 	#header h1 {
@@ -63,6 +91,30 @@ body {
 	}
 	#content-title h1 {
 		text-indent:2em;
+	}
+	#content-wrapper {
+		width:76vw;
+		float:right;
+		text-align: left;
+	}
+	#doc-nav {
+		position: absolute;
+		width:20vw;
+		float:left;
+		height:100%;
+		list-style: none;
+	}	
+	#doc-nav p {
+		margin:0;
+		width: 100%;
+		padding-top:10px;
+		padding-bottom: 10px;
+		color:black;
+		font-family: sans-serif;
+		text-indent:2em; 
+	}
+	#doc-nav p:hover {
+		background-color: darkgray;
 	}
 }
 #content {
@@ -89,6 +141,7 @@ body {
 	width:100%;
 }
 #content-title h1 {
+	display: inline-block;
 	margin-left: 0;
 	margin-right: 0;
 	margin:0;
@@ -96,11 +149,34 @@ body {
 	color:white;
 	font-family: sans-serif;
 	line-height: 2; 	
+	width:auto;
 }
 pre {
 	border-radius: 5px;
 	overflow: hidden;
 }
-#content-wrapper {
-	text-align:center;
+#after-title {
+	height:100%;
+	overflow: hidden;
+}
+#content h2 {
+	font-family: sans-serif;
+	text-align: left;
+}
+.buttons {
+	float:right;
+}
+.buttons p {
+	display: inline-block;
+	color:white;
+	height:auto;	
+	min-height: 100% !important;
+	background-color: red;
+}
+#content-wrapper ul {
+	list-style: none;
+} 
+#doc-nav {
+	background-color: lightgray;
+	margin:0;
 }
