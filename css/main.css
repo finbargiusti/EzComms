@@ -1,0 +1,42 @@
+body {
+	background-color:ghostwhite;
+	margin:0;	
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+#header {
+	position:absolute;
+	margin-top:0;
+	font-family: serif;
+	width: 100vw;
+	background-color: #3498db;
+	text-align: center;
+}
+#header h1 {
+	color:ghostwhite;
+	font-size:5vw;
+}
+#header p {
+	color:ghostwhite;
+	font-size:2vw;
+	font-family:sans-serif;
+	margin-bottom:3vw;
+}
+#content {
+	width:100vw;
+	height:100vh;
+	background-color: ghostwhite;
+}
+#content h2 {
+	text-align: center;
+}
+#terminal {
+	width:100vw;
+}
+#terminal pre {
+	border-left:white dashed;
+	width:50%;
+	display: inline-block;
+	margin-right:-8px;
+	padding:0;
+} 
